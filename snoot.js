@@ -16,7 +16,6 @@ var thirtyOne = document.createDocumentFragment();
 function removeSelectDefaults() {
     var emptyBoxes = document.getElementsByTagName("select");
     for (var i = 0; i < emptyBoxes.length; i++) {
-        //Set to 1 or 0 to errase error
         emptyBoxes[i].selectedIndex = -1;
     }
 }
@@ -43,13 +42,14 @@ function updateDays() {
     while (dates[28]) {
         deliveryDays.removeChild(dates[28]);
     }
+    if (deliveryYear.selectedIndex === -1) {
+        deliveryDays.selectedIndex = 0;
+    }
 }
 
 //Function that sets up page on a load event
 function setUpPage() {
     removeSelectDefaults();
-    setUpDays();
-    updateDays();
 }
 
 
