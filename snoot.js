@@ -45,11 +45,44 @@ function updateDays() {
     if (deliveryYear.selectedIndex === -1) {
         deliveryDays.selectedIndex = 0;
     }
+
+
+    //If its Feburay and 2020 twentynine
+    if (selectedMonth === "2" && deliveryYear.options[deliveryYear.selectedIndex].value === "2020") {
+        deliveryDays.appendChild(twentyNine.cloneNode(true));
+    }
+    //Else if its a 30 day month thiry
+    else if (selectedMonth === "4" || selectedMonth === "6" || selectedMonth === "9" || selectedMonth === "11") {
+        deliveryDays.appendChild(thirty.cloneNode(true));
+    }
+    //Else if 31 day month thiryone
+    else if (selectedMonth === "1" || selectedMonth === "3" || selectedMonth === "5" || selectedMonth === "7" || selectedMonth === "8" || selectedMonth === "10" || selectedMonth === "12") {
+        deliveryDays.appendChild(thirtyOne.cloneNode(true));
+    }
 }
+
 
 //Function that sets up page on a load event
 function setUpPage() {
     removeSelectDefaults();
+    setUpDays();
+    createEventListener();
+}
+
+//Function to create  our event handlers
+function createEventListener() {
+    var deliveryMonth = document.getElementById("delivMo");
+    if (deliveryMonth.addEventListener) {
+        deliveryMonth.addEventListener("change", updateDays, false);
+    } else if (deliveryMonth.attachEvent) {
+        deliveryMonth.attachEvent("onchange", updateDays);
+    }
+    var deliveryYear = document.getElementById("delivYr");
+    if (deliveryYear.addEventListener) {
+        deliveryYear.addEventListener("change", updateDays, false);
+    } else if (deliveryYear.attachEvent) {
+        deliveryYear.attachEvent("onchange", updateDays);
+    }
 }
 
 
