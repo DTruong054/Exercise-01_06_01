@@ -5,7 +5,6 @@
     Author: Daniel Truong
     Date: 8.6.18
 */
-
 "use strict";
 
 var twentyNine = document.createDocumentFragment();
@@ -61,6 +60,39 @@ function updateDays() {
     }
 }
 
+//Function to inspect custom check box on message change
+function autoCheckCustom() {
+    var messageBox = document.getElementById("customText");
+
+    if (messageBox.value !== "" && messageBox.value !== messageBox.placeholder) {
+        //Text area has a message, check the box 
+        document.getElementById("custom").checked = "checked"
+    } else {
+        //Text area has not message, uncheck the box  
+        document.getElementById("custom").checked = "";     
+    }
+}
+
+//Function to copy billing to delivery address
+function copyBillingAddress() {
+    var billingInputElements = document.querySelectorAll("#billingAddress input");
+    var deliveryInputElements = document.querySelectorAll("#deliveryAddress input");
+    if (document.getElementById("sameAddr").checked) {
+        //Duplicate addresses - check box is checked, do a copy
+        for (var i = 0; i < billingInputElements.length; i++) {
+            deliveryInputElements[i + 1].value = billingInputElements[i].value;
+        }
+        document.querySelector("#deliveryAddress select").value;
+        document.querySelector("#billingAddress select").value;
+    } else {
+        //Duplicate addresses - check box is unchecked, erase
+        for (var i = 0; i < billingInputElements.length; i++) {
+            deliveryInputElements[i + 1].value = "";
+        }
+        document.querySelector("#deliveryAddress select").selectedIndex = -1;
+    }
+}
+
 
 //Function that sets up page on a load event
 function setUpPage() {
@@ -77,11 +109,26 @@ function createEventListener() {
     } else if (deliveryMonth.attachEvent) {
         deliveryMonth.attachEvent("onchange", updateDays);
     }
+
     var deliveryYear = document.getElementById("delivYr");
     if (deliveryYear.addEventListener) {
         deliveryYear.addEventListener("change", updateDays, false);
     } else if (deliveryYear.attachEvent) {
         deliveryYear.attachEvent("onchange", updateDays);
+    }
+
+    var messageBox = document.getElementById("customText");
+    if (messageBox.addEventListener) {
+        messageBox.addEventListener("change", autoCheckCustom, false);
+    } else if (messageBox.attachEvent) {
+        messageBox.attachEvent("onchange", autoCheckCustom);
+    }
+
+    var same = document.getElementById("sameAddr");
+    if (same.addEventListener) {
+        same.addEventListener("change", copyBillingAddress, false);
+    } else if (same.attachEvent) {
+        same.attachEvent("onchange", copyBillingAddress);
     }
 }
 
