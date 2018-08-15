@@ -245,17 +245,17 @@ function validatePayment(fieldsetId) {
 }
 
 //Function to validate 
-function validateMessage(fieldsetId) {
+function validateMessage() {
     var msgBox = document.getElementById("customText");
     var errorDiv = document.querySelectorAll("#message" + " .errorMessage")[0];
     var fieldsetValidity = true;
     try {
         //validate checkbox and  text area customMessage
         if (document.getElementById("custom").checked && (msgBox.value === "" || msgBox.value === msgBox.placeholder)) {
-            throw "Please enter your custom message text.";
+            throw "Please enter your Custom Message Text.";
         } else {
-            errorDiv.style.display = "block";
-            errorDiv.innerHTML = msg;
+            errorDiv.style.display = "none";
+            errorDiv.innerHTML = "";
             msgBox.style.background = "rgb(255,255,255)";
         }
     } catch (msg) {
