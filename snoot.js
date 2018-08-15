@@ -76,7 +76,7 @@ function autoCheckCustom() {
         document.getElementById("custom").checked = "checked"
     } else {
         //Text area has not message, uncheck the box  
-        document.getElementById("custom").checked = "";     
+        document.getElementById("custom").checked = "";
     }
 }
 
@@ -101,7 +101,7 @@ function copyBillingAddress() {
 }
 
 //Function to validate address - billing and delivery
-function validateAddress() {
+function validateAddress(fieldsetId) {
     var inputElements = document.querySelectorAll("#" + fieldsetId + " input");
     var errorDiv = document.querySelectorAll("#" + fieldsetId + " .errorMessage")[0];
     var fieldsetValidity = true;
@@ -124,11 +124,21 @@ function validateAddress() {
         currentElement = document.querySelectorAll("#" + fieldsetId + " select")[0];
         if (currentElement.selectedIndex === -1) {
             currentElement.style.border = "1px solid red";
-            fieldsetValidity = false;   
+            fieldsetValidity = false;
         } else {
             currentElement.style.border = "";
         }
-
+        for (var i = 0; i < elementCount; i++) {
+            currentElement = selectElements[i];
+            if (currentElement.selectedIndex === -1) {
+                //Blanks
+                currentElement.style.border = "1px solid rgb(255,0,0)";
+                fieldsetValidity = false;
+            } else {
+                //Non-blanks
+                currentElement.style.border = "";
+            }
+        }
         if (!fieldsetValidity) {
             //Action for invald fieldset
             if (fieldsetId === "billingAddress") {
@@ -136,7 +146,7 @@ function validateAddress() {
             } else {
                 throw "Please complete all delivery address information.";
             }
-        } else{
+        } else {
             errorDiv.style.display = "none";
             errorDiv.innerHTML = "";
         }
@@ -148,25 +158,13 @@ function validateAddress() {
 }
 
 //Function to validate delivery date
-function validateAddressDate() {
+function validateAddressDate(fieldsetId) {
     var selectElements = document.querySelectorAll("#deliveryDate" + " select");
     var errorDiv = document.querySelectorAll("#deliveryDate" + " .errorMessage")[0];
     var fieldsetValidity = true;
     var elementCount = selectElements.length;
     var currentElement;
     try {
-        //Loop though the input field looking for blanks
-        for (var i = 0; i < elementCount; i++) {
-            currentElement = selectElements[i];
-            if (currentElement.selectedIndex === -1) {
-                //Blanks
-                currentElement.style.border = "1px solid rgb(255,0,0)";
-                fieldsetValidity = false;
-            } else {
-                //Non-blanks
-                currentElement.style.border = "";
-            }
-        }
         if (!fieldsetValidity) {
             throw "Please specify a Delivery Date"
         } else {
@@ -181,8 +179,8 @@ function validateAddressDate() {
 }
 
 
-function validateAddressDate() {
-    var errorDiv = document.querySelectorAll("#deliveryDate" + " .errorMessage")[0];
+function validatePayment(fieldsetId) {
+    var errorDiv = document.querySelectorAll("#paymentInfo" + " .errorMessage")[0];
     var fieldsetValidity = true;
     var ccNumElement = document.getElementById("ccNum");
     var cvvElement = document.getElementById("cvv");
@@ -190,9 +188,28 @@ function validateAddressDate() {
     var selectElements = document.querySelectorAll("#paymentInfo" + " select");
     var elementCount = selectElements.length;
     var currentElement;
-    //Todo Start here Tomorrow.
     try {
-        //Loop though the input field looking for blanks
+        //validate  radio buttons one must be on
+        if (!cards[0].checked && !cards[1].checked && !cards[2].checked && !cards[3].checked) {
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.outline = "1px solid rgb(255,0,0)";
+            }
+            fieldsetValidity = false;
+        } else {
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.outline = "";
+            }
+        }
+
+        //Validate card numbers
+        if (ccNumElement.value === "") {
+            ccNumElement.style.background = "rgb(255,233,233)";
+            formValidity = false;
+        } else {
+            ccNumElement.style.background = "rgb(255,255,255)"
+        }
+
+        //Validate experation date
         for (var i = 0; i < elementCount; i++) {
             currentElement = selectElements[i];
             if (currentElement.selectedIndex === -1) {
@@ -204,8 +221,18 @@ function validateAddressDate() {
                 currentElement.style.border = "";
             }
         }
+
+        //Validate cvv number
+        if (cvvElement.value === "") {
+            cvvElement.style.background = "rgb(255,233,233)";
+            formValidity = false;
+        } else {
+            cvvElement.style.background = "rgb(255,255,255)"
+        }
+
+        //Loop though the input field looking for blanks
         if (!fieldsetValidity) {
-            throw "Please specify a Delivery Date"
+            throw "Please complete all payment information";
         } else {
             errorDiv.style.display = "none";
             errorDiv.innerHTML = "";
@@ -213,6 +240,28 @@ function validateAddressDate() {
     } catch (msg) {
         errorDiv.style.display = "block";
         errorDiv.innerHTML = msg;
+        formValidity = false;
+    }
+}
+
+//Function to validate 
+function validateMessage(fieldsetId) {
+    var msgBox = document.getElementById("customText");
+    var errorDiv = document.querySelectorAll("#message" + " .errorMessage")[0];
+    var fieldsetValidity = true;
+    try {
+        //validate checkbox and  text area customMessage
+        if (document.getElementById("custom").checked && (msgBox.value === "" || msgBox.value === msgBox.placeholder)) {
+            throw "Please enter your custom message text.";
+        } else {
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML = msg;
+            msgBox.style.background = "rgb(255,255,255)";
+        }
+    } catch (msg) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        msgBox.style.background = "rgb(255,233,233)";
         formValidity = false;
     }
 }
@@ -228,6 +277,8 @@ function validateForm(evt) {
     validateAddress("billingAddress");
     validateAddress("deliveryAddress");
     validateAddressDate();
+    validatePayment();
+    validateMessage();
 
     if (formValidity === true) {
         //Form is valid
@@ -238,7 +289,7 @@ function validateForm(evt) {
     } else {
         document.getElementById("errorText").innerHTML = "Please fix the indicated problems and then resubmit your order";
         document.getElementById("errorText").style.display = "block";
-        scroll(0,0);
+        scroll(0, 0);
     }
 }
 
@@ -303,4 +354,6 @@ if (window.addEventListener) {
 
 //Bael our hero now continues on his journey with his friend Vivien. Vivien is still mad about what has happened with Roche the guard captain, but she forgives him. They have escaped the guards and the town. They have moved for about 22 clicks to due east and meet a sage by the name of FileEditSection. He was a sorcerer, he practested some water majic. He was really respected and was someone who should be feared. He was old though and greated the heroes Beal and Vivien with a happy simile. They were happy to see a nice face. Viven said: "Hello, my name is Vivian and this is..." "Beal." interupted Bael. FileEditSection said: "Yo waz up mi boiz". Bael said: "What is wrong with you old man". "Nuning". Viven was confused on who this man was and why he was speaking in such a way. Bael thought of switching the topic. "SO what are you doing here?" Bael said strangely. FileEditSection replied: "OOF, yo boi here is takin a chill diggity dog." (Earthquake noices). Vivien: "What was that??????" FileEditSection: Ahh twat, yuu dinint no no load sondz. Bael was confused on what the sage even said. Bael and Viven think that this man was strange. They decided to just leave the old cope behind. FieldEditSelection stopped them with a water gun attack. They both dodged. Field select would then use Hydro Pump. This knocked out Viven and this enraged Alex he used punish. This was not very effecttive against  FileEditSection. He was not ready to give up on catching the wild FileEditSection. This person was not gonna fit in the pokeTrap. FileEditSeclection was not gonna be his first pokemon. This person was not gonna become a fighting slave that just fight after being issued orders. This person fought to his last breath but finally got captured by a pokeTrap. Alex rushed to the PokeCenter and healed up Vivien and his new pokemon FileEditSelect. After they had left the pokecenter the ran into Gary Oates. Xing was shocked that his logn time rivel was here. "Gary Linebacker". You dare show your face here. What is wrong with you. HOw did you find me. 
 
-//Gary was happy that he finally got to face rivle again. Rizer was pissed just to see gary's face again. They started to battle with their pokemon. Rizer summoned Selica. Gay summoned Johnson. Selica used splash. This had no effect on johnson. Johnson used leer. Silica started to scream stalker. The Police was summoned though accord. The police started useing pyromancies at Johnson. Police used forbidden sun and hit Johnson. Police: "Praise the sun". Gay started shotting lighting outta his eyes, and hit police. This did not hit police as he spammed his roll button. This was lucky since Gay was a great Pvper. He was known to kill everyone. This was not gonna stop Darnic and Silica. They ran back into the pokemon center and healed themselves. Then used a escape rope and teleported out side and ran from Gay. Gary was pissed and went on a rampage. He use bodyslam and destroyed the village. "You Died" Shown up on the police. Darnic ran as fast as he could untill his legs turned into wheels. This shocked Beladona because she did not kno wthat Darnic can just transform into a vehical. They drove all the way to Almozes, a camp of MECHS. They saw a person that was a blacksmith. She was the one that created all the MECHS.
+//Gary was happy that he finally got to face rivle again. Rizer was pissed just to see gary's face again. They started to battle with their pokemon. Rizer summoned Selica. Gay summoned Johnson. Selica used splash. This had no effect on johnson. Johnson used leer. Silica started to scream stalker. The Police was summoned though accord. The police started useing pyromancies at Johnson. Police used forbidden sun and hit Johnson. Police: "Praise the sun". Gay started shotting lighting outta his eyes, and hit police. This did not hit police as he spammed his roll button. This was lucky since Gay was a great Pvper. He was known to kill everyone. This was not gonna stop Darnic and Silica. They ran back into the pokemon center and healed themselves. Then used a escape rope and teleported out side and ran from Gay. Gary was pissed and went on a rampage. He use bodyslam and destroyed the village. "You Died" Shown up on the police. Darnic ran as fast as he could untill his legs turned into wheels. This shocked Beladona because she did not kno wthat Darnic can just transform into a vehical. They drove all the way to Almozes, a camp of MECHS. They saw a person that was a blacksmith. She was the one that created all the MECHS. William and sherry were astonished on what this person has built. They got a tour of the place and got to meet her prized creation; the MECH known as Omegatron. He was a MECH that could transform and annialate all that he sees. The creator known as Eilen said: "Hi, my name is Elien and if i can help in any way please tell me." Willaim wanted something that could attack and kill Green. Green was someone who could defeat a blade of the fallen sun so easily. This frightened William. He tried to beat Green but never could. Sherry tried to heal the wounds taken during the fight with Green. She said: "How are your injuries?" He wanted to say he was fine but he was bleededing. Eline grabbed her medical droid and tried to help the stranger. ViewGoDebug wanted to go out for some fresh air. He was denied and executed by Omegatron. This enraged Shelly because she liked having freshed water. "This was need, his name was too long to spell" replied the author of this story. Then the author calmed down and errased all notice of the sage. He also put them in a desert. "What just happened" said William. What ever do you mean said Shelby. Hmm it seems like the author forgot to erase William's memeories, but thats fine it would be more entertaining. Shellby said "Are you sure your all there honey?". The author seems to have also replaced shell's personality. "Who are you" demanded WIlliam, but before she could reply, OmegaTron has appeared. He was pissed off and started to attack our hero William and Shelly. The battle began and it was William and Shelbi vs OmegaTron. This was an epic battle but OmegaTron had regeneration. He would regenerate his limbs after he got attacked. the God of death Zekerum, has shown up. He used a death blast attack and this was super effecive vs Omegatron. OmegaTron used OmegaBeam and DE_stroyed Zekerum. He was gonna attack william but it seems like he got suprised by a sneak attack by Shkelly. Shelby used assassinate and this killed Omegatron. William and Shellby got 1000exp. They both lvled up to lvl 100. This pleased William. He was finally lvl100 and could kill anyone that got in his way. Now he is ready to face the demonlord that raided the village. Now they are on their way to the demon lord's lair. The author was lazy to write the joruny there so we just skipping to the lair. Now they have gotten to the lair. Both Shellbert and William are now lvl 1000 thanks to slaying a black dragon that was terroizing the people in a city. They completed a few quests as well. Now they have enough money to buy new gear so they went back to Selium, the town that they bought their first equipment at. The guards still reconize their face and started attacking them. Thsi was vengence for attacking the guard captain but they where so powerful they took no damage. They just walked into the shop and boought all they needed while taking 0 damage from the guards still attacking. The shopkeeper was shocked and was wondering what was happening. They left the town and teleported away from the guards. They started their raid on the demon lord's lair. They are ready to start their assult. This will be the final assult. This wlll be the assult that ends all assults. This is something that the heroes have been waitng for. This assult is the final frontir. This assult will end the war between demons and humans. This is the end all be all assult. This was the last assult that woulf happen. This was the end of assults. There will be peace after this assult. This was was the conclusion of all assukts. This was the final finally of assults. This was gonna terminate the demon lord and be the end of assults. This assult will finally resolve all the world's problem. This is going to be the climax of assults. This will end all assults. This will finish their story.This is the end. This will end all the wars. This is the start of the end. The heroes start their onslaught and started attacking the demons. They attacked all the demons and killed all the demons untill they reached the demon lord's chambers. William and Shell started attacking the demon lord but he was powerful. 
+
+//He started to using his Overpowered mode his god form.
