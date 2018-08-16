@@ -128,20 +128,6 @@ function validateAddress(fieldsetId) {
         } else {
             currentElement.style.border = "";
         }
-        //0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-        //todo Ask for help here
-        // for (var i = 0; i < elementCount; i++) {
-        //     currentElement = selectElements[i];
-        //     if (currentElement.selectedIndex === -1) {
-        //         //Blanks
-        //         currentElement.style.border = "1px solid rgb(255,0,0)";
-        //         fieldsetValidity = false;
-        //     } else {
-        //         //Non-blanks
-        //         currentElement.style.border = "";
-        //     }
-        // }
-        // 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
         if (!fieldsetValidity) {
             //Action for invald fieldset
             if (fieldsetId === "billingAddress") {
@@ -168,6 +154,17 @@ function validateAddressDate(fieldsetId) {
     var elementCount = selectElements.length;
     var currentElement;
     try {
+        for (var i = 0; i < elementCount; i++) {
+            currentElement = selectElements[i];
+            if (currentElement.selectedIndex === -1) {
+                //Blanks
+                currentElement.style.border = "1px solid rgb(255,0,0)";
+                fieldsetValidity = false;
+            } else {
+                //Non-blanks
+                currentElement.style.border = "";
+            }
+        }
         if (!fieldsetValidity) {
             throw "Please specify a Delivery Date";
         } else {
@@ -248,7 +245,7 @@ function validatePayment(fieldsetId) {
 }
 
 //Function to validate 
-function validateMessage(fieldsetId) {
+function validateMessage() {
     var msgBox = document.getElementById("customText");
     var errorDiv = document.querySelectorAll("#message" + " .errorMessage")[0];
     var fieldsetValidity = true;
@@ -268,6 +265,51 @@ function validateMessage(fieldsetId) {
         formValidity = false;
     }
 }
+
+//Validate create account
+function validateCreateAccount() {
+    var errorDiv = document.querySelectorAll("#createAccount" + " .errorMessage")[0];
+    var usernameElement = document.getElementById("username")
+    var password1Element = document.getElementById("pass1");
+    var password2lement = document.getElementById("pass2");
+    var invColor = "rgb(255,233,233)";
+    var passMisMatch = false;
+    var fieldsetValidity = true;
+    usernameElement.style.background = "rgb(255,255,255)";
+    password1Element.style.background = "rgb(255,255,255)";
+    password2lement.style.background = "rgb(255,255,255)";
+    errorDiv.style.display = "none";
+    errorDiv.innerHTML = "";
+    try {
+        //One or more fields as data
+        if (usernameElement.value !== "" && password1Element.value !== "" && password2lement !== "") {
+            if (password1Element.value !== password2lement.value) {
+                //Veriy the passwords match
+                throw "The passwords entered don't match, please re-enter.";
+                fieldsetValidity = false;
+                passMisMatch = true
+            } else if (usernameElement.value === "" && password1Element.value === "" && password2lement.value === "") {
+                fieldsetValidity = true;
+                passMisMatch = false;
+            }
+        } else {
+            fieldsetValidity = false;
+            throw "Please complete all fields to create an account";
+        }
+    } catch (msg) {
+        errorDiv.style.display = "block";
+        errorDiv.innerHTML = msg;
+        password1Element.style.background = invColor;
+        password2lement.style.background = invColor;
+        formValidity = false;
+        if (passMisMatch) {
+            usernameElement.style.background = "rgb(255,255,255)";
+        } else {
+            usernameElement.style.background = invColor;
+        }
+    }
+}
+
 //Function to validate entire form
 function validateForm(evt) {
     if (evt.preventDefault) {
@@ -282,6 +324,7 @@ function validateForm(evt) {
     validateAddressDate();
     validatePayment();
     validateMessage();
+    validateCreateAccount();
 
     if (formValidity === true) {
         //Form is valid
@@ -359,4 +402,4 @@ if (window.addEventListener) {
 
 //Gary was happy that he finally got to face rivle again. Rizer was pissed just to see gary's face again. They started to battle with their pokemon. Rizer summoned Selica. Gay summoned Johnson. Selica used splash. This had no effect on johnson. Johnson used leer. Silica started to scream stalker. The Police was summoned though accord. The police started useing pyromancies at Johnson. Police used forbidden sun and hit Johnson. Police: "Praise the sun". Gay started shotting lighting outta his eyes, and hit police. This did not hit police as he spammed his roll button. This was lucky since Gay was a great Pvper. He was known to kill everyone. This was not gonna stop Darnic and Silica. They ran back into the pokemon center and healed themselves. Then used a escape rope and teleported out side and ran from Gay. Gary was pissed and went on a rampage. He use bodyslam and destroyed the village. "You Died" Shown up on the police. Darnic ran as fast as he could untill his legs turned into wheels. This shocked Beladona because she did not kno wthat Darnic can just transform into a vehical. They drove all the way to Almozes, a camp of MECHS. They saw a person that was a blacksmith. She was the one that created all the MECHS. William and sherry were astonished on what this person has built. They got a tour of the place and got to meet her prized creation; the MECH known as Omegatron. He was a MECH that could transform and annialate all that he sees. The creator known as Eilen said: "Hi, my name is Elien and if i can help in any way please tell me." Willaim wanted something that could attack and kill Green. Green was someone who could defeat a blade of the fallen sun so easily. This frightened William. He tried to beat Green but never could. Sherry tried to heal the wounds taken during the fight with Green. She said: "How are your injuries?" He wanted to say he was fine but he was bleededing. Eline grabbed her medical droid and tried to help the stranger. ViewGoDebug wanted to go out for some fresh air. He was denied and executed by Omegatron. This enraged Shelly because she liked having freshed water. "This was need, his name was too long to spell" replied the author of this story. Then the author calmed down and errased all notice of the sage. He also put them in a desert. "What just happened" said William. What ever do you mean said Shelby. Hmm it seems like the author forgot to erase William's memeories, but thats fine it would be more entertaining. Shellby said "Are you sure your all there honey?". The author seems to have also replaced shell's personality. "Who are you" demanded WIlliam, but before she could reply, OmegaTron has appeared. He was pissed off and started to attack our hero William and Shelly. The battle began and it was William and Shelbi vs OmegaTron. This was an epic battle but OmegaTron had regeneration. He would regenerate his limbs after he got attacked. the God of death Zekerum, has shown up. He used a death blast attack and this was super effecive vs Omegatron. OmegaTron used OmegaBeam and DE_stroyed Zekerum. He was gonna attack william but it seems like he got suprised by a sneak attack by Shkelly. Shelby used assassinate and this killed Omegatron. William and Shellby got 1000exp. They both lvled up to lvl 100. This pleased William. He was finally lvl100 and could kill anyone that got in his way. Now he is ready to face the demonlord that raided the village. Now they are on their way to the demon lord's lair. The author was lazy to write the joruny there so we just skipping to the lair. Now they have gotten to the lair. Both Shellbert and William are now lvl 1000 thanks to slaying a black dragon that was terroizing the people in a city. They completed a few quests as well. Now they have enough money to buy new gear so they went back to Selium, the town that they bought their first equipment at. The guards still reconize their face and started attacking them. Thsi was vengence for attacking the guard captain but they where so powerful they took no damage. They just walked into the shop and boought all they needed while taking 0 damage from the guards still attacking. The shopkeeper was shocked and was wondering what was happening. They left the town and teleported away from the guards. They started their raid on the demon lord's lair. They are ready to start their assult. This will be the final assult. This wlll be the assult that ends all assults. This is something that the heroes have been waitng for. This assult is the final frontir. This assult will end the war between demons and humans. This is the end all be all assult. This was the last assult that woulf happen. This was the end of assults. There will be peace after this assult. This was was the conclusion of all assukts. This was the final finally of assults. This was gonna terminate the demon lord and be the end of assults. This assult will finally resolve all the world's problem. This is going to be the climax of assults. This will end all assults. This will finish their story.This is the end. This will end all the wars. This is the start of the end. The heroes start their onslaught and started attacking the demons. They attacked all the demons and killed all the demons untill they reached the demon lord's chambers. William and Shell started attacking the demon lord but he was powerful. 
 
-//He started to using his Overpowered mode his god form.
+//He started to using his Overpowered mode his god form. There is nothing that the heroes could do. The hero would use Semiramis, and her life to boost his lvl to 2000. This was a boost that will face the demon lord. His god mode was lvl 9999. This was not enough. He called upon the power of his anestors and used a artifact that he received. This would combine the lvl of all the people that would die to the artifact. He has killed OmegaTron and used his soul to kill the rest of the world. Thsi would take some time however so the hero would stall the demonlord untill The mECHA was done slaying everyone. The hero and the demonlord fight untill the bitter end. The lord was ready to face the hero and play around with him. The hero has sacrified his heroine and he was not ready to be played with. He fought untill the demon lord was getting tired. He was not going to have this. He killed the hero off. A few momenets later the hero gained everyon's lvl but it was too late the whole world was dead, and the demonlord has gained the exp for killing the hero. Now he is the most powerful demon out there he returns to his demon realm.
