@@ -128,17 +128,20 @@ function validateAddress(fieldsetId) {
         } else {
             currentElement.style.border = "";
         }
-        for (var i = 0; i < elementCount; i++) {
-            currentElement = selectElements[i];
-            if (currentElement.selectedIndex === -1) {
-                //Blanks
-                currentElement.style.border = "1px solid rgb(255,0,0)";
-                fieldsetValidity = false;
-            } else {
-                //Non-blanks
-                currentElement.style.border = "";
-            }
-        }
+        //0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+        //todo Ask for help here
+        // for (var i = 0; i < elementCount; i++) {
+        //     currentElement = selectElements[i];
+        //     if (currentElement.selectedIndex === -1) {
+        //         //Blanks
+        //         currentElement.style.border = "1px solid rgb(255,0,0)";
+        //         fieldsetValidity = false;
+        //     } else {
+        //         //Non-blanks
+        //         currentElement.style.border = "";
+        //     }
+        // }
+        // 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
         if (!fieldsetValidity) {
             //Action for invald fieldset
             if (fieldsetId === "billingAddress") {
@@ -166,7 +169,7 @@ function validateAddressDate(fieldsetId) {
     var currentElement;
     try {
         if (!fieldsetValidity) {
-            throw "Please specify a Delivery Date"
+            throw "Please specify a Delivery Date";
         } else {
             errorDiv.style.display = "none";
             errorDiv.innerHTML = "";
@@ -245,7 +248,7 @@ function validatePayment(fieldsetId) {
 }
 
 //Function to validate 
-function validateMessage() {
+function validateMessage(fieldsetId) {
     var msgBox = document.getElementById("customText");
     var errorDiv = document.querySelectorAll("#message" + " .errorMessage")[0];
     var fieldsetValidity = true;
